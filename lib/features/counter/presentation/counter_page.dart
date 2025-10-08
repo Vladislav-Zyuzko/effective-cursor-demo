@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cursor_demo/features/counter/presentation/counter_viewmodel.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cursor_demo/features/counter/presentation/counter_bloc.dart';
 import 'package:cursor_demo/uikit/theme_provider.dart';
 
 class CounterPage extends StatelessWidget {
@@ -34,10 +35,10 @@ class CounterPage extends StatelessWidget {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Consumer<CounterViewModel>(
-              builder: (context, viewModel, child) {
+            BlocBuilder<CounterBloc, CounterState>(
+              builder: (context, state) {
                 return Text(
-                  '${viewModel.counter}',
+                  '${state.counter}',
                   style: Theme.of(context).textTheme.headlineMedium,
                 );
               },
@@ -49,13 +50,13 @@ class CounterPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: () => Provider.of<CounterViewModel>(context, listen: false).increment(),
+            onPressed: () => context.read<CounterBloc>().add(CounterIncremented()),
             tooltip: 'Increment',
             child: const Icon(Icons.add),
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
-            onPressed: () => Provider.of<CounterViewModel>(context, listen: false).decrement(),
+            onPressed: () => context.read<CounterBloc>().add(CounterDecremented()),
             tooltip: 'Decrement',
             child: const Icon(Icons.remove),
           ),
