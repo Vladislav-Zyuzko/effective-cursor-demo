@@ -11,4 +11,7 @@ class CounterRepositoryImpl implements CounterRepository {
 
   @override
   Future<void> incrementCounter() => _localDataSource.incrementCounter();
+
+  @override
+  Future<void> decrementCounter() => _localDataSource.decrementCounter();
 }
