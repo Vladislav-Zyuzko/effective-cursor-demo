@@ -6,6 +6,8 @@ import 'package:cursor_demo/features/counter/domain/decrement_counter_usecase.da
 import 'package:cursor_demo/features/counter/domain/increment_counter_usecase.dart';
 import 'package:cursor_demo/features/counter/presentation/counter_page.dart';
 import 'package:cursor_demo/features/counter/presentation/counter_viewmodel.dart';
+import 'package:cursor_demo/uikit/app_themes.dart';
+import 'package:cursor_demo/uikit/theme_provider.dart';
 
 void main() {
   final counterLocalDataSource = CounterLocalDataSource();
@@ -14,8 +16,15 @@ void main() {
   final decrementCounterUseCase = DecrementCounterUseCase(counterRepository);
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => CounterViewModel(incrementCounterUseCase, decrementCounterUseCase),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => CounterViewModel(incrementCounterUseCase, decrementCounterUseCase),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ThemeProvider(),
+        ),
+      ],
       child: const MyApp(),
     ),
   );
@@ -26,13 +35,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const CounterPage(title: 'Flutter Demo Home Page'),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          title: 'Flutter Demo',
+          theme: AppThemes.lightTheme,
+          darkTheme: AppThemes.darkTheme,
+          themeMode: themeProvider.themeMode,
+          home: const CounterPage(title: 'Flutter Demo Home Page'),
+        );
+      },
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cursor_demo/features/counter/presentation/counter_viewmodel.dart';
+import 'package:cursor_demo/uikit/theme_provider.dart';
 
 class CounterPage extends StatelessWidget {
   const CounterPage({super.key, required this.title});
@@ -13,6 +14,18 @@ class CounterPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
+        actions: [
+          Consumer<ThemeProvider>(
+            builder: (context, themeProvider, child) {
+              return Switch(
+                value: themeProvider.themeMode == ThemeMode.dark,
+                onChanged: (value) {
+                  themeProvider.toggleTheme(value);
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
